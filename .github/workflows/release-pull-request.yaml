@@ -32,6 +32,8 @@ jobs:
     steps: 
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
       - name: Fetch base ref
         run: |
           git fetch origin "${{ github.base_ref }}"
@@ -59,4 +61,4 @@ jobs:
         env:
           REMOTE_REPO: "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         run: |
-          git push "${REMOTE_REPO}" HEAD:/refs/heads/${{ github.head_ref }}
+          git push "${REMOTE_REPO}" HEAD:refs/heads/${{ github.head_ref }}
