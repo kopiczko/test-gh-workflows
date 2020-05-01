@@ -59,4 +59,4 @@ jobs:
         env:
           REMOTE_REPO: "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         run: |
-          git push "${REMOTE_REPO}" HEAD:${{ github.base_ref }}
+          git push "${REMOTE_REPO}" HEAD:${{ github.head_ref }}
