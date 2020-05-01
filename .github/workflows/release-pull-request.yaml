@@ -1,34 +1,35 @@
 name: Release pull request
 on:
-  pull_request:
-    #types: [opened]
+  pull_request: {}
+  #pull_request:
+  #  types: [opened]
 jobs:
-  check-if-should-run:
-    name: Check if should run
+  gather-facts:
+    name: Gather facts
     runs-on: ubuntu-18.04
     outputs:
-      release: ${{ steps.check-if-release-pr.outputs.release }}
+      version: ${{ steps.get-version.outputs.version }}
     steps:
-      - id: check-if-release-pr
-        name: Check if release PR
+      - id: get version
+        name: Get version
         run: |
           title="${{ github.event.pull_request.title }}"
-          release="false"
-          if grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
-            release="true"
+          if echo $title | grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
+            version=$(echo $title | cut -d ' ' -f 2)
           fi
-          echo "release=\"$release\""
-          echo "::set-output name=release::${release}"
+          echo "version=\"$version\""
+          echo "::set-output name=version::${version}"
   prepare-pr-content:
     name: Prepare PR content
     runs-on: ubuntu-18.04
     needs: check-if-should-run
-    if: ${{ needs.check-if-should-run.outputs.release == "true" }}
+    if: ${{ needs.gather-facts.outputs.version }}
     steps: 
-      - name: Check if PR is empty
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Fail if PR is not empty
         run: |
-          echo "github.base_ref=${{ github.base_ref }}"
-          echo "github.head_ref=${{ github.head_ref }}"
+          git diff --exit-code "${{ github.base_ref }}" "${{ github.head_ref }}"
       - name: Print GITHUB_SHA and GITHUB_REF
         run: |
           echo "GITHUB_SHA=${GITHUB_SHA}"
