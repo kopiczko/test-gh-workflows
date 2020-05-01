@@ -22,7 +22,7 @@ jobs:
   prepare_pr_content:
     name: Prepare PR content
     runs-on: ubuntu-18.04
-    needs: check-if-should-run
+    needs: gather_facts
     if: ${{ needs.gather_facts.outputs.version }}
     steps: 
       - name: Checkout code
