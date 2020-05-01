@@ -37,12 +37,12 @@ jobs:
           git fetch origin "${{ github.base_ref }}"
       - name: Fail if PR is not empty
         run: |
+          git diff --exit-code "origin/${{ github.base_ref }}" HEAD
           # -----------------------------------------------------------
           # --- For testing -------------------------------------------
           exit 0
           # -----------------------------------------------------------
           # -----------------------------------------------------------
-          git diff --exit-code "origin/${{ github.base_ref }}" HEAD
       - name: Update changelog
         run: |
           version="${{ needs.gather_facts.outputs.version }}"
@@ -59,4 +59,4 @@ jobs:
         env:
           REMOTE_REPO: "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         run: |
-          git push "${REMOTE_REPO}" HEAD:${{ github.ref }}
+          git push "${REMOTE_REPO}" HEAD:${{ github.base_ref }}
