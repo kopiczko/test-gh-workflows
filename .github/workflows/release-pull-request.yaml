@@ -37,12 +37,12 @@ jobs:
           git fetch origin "${{ github.base_ref }}"
       - name: Fail if PR is not empty
         run: |
-          git diff --exit-code "origin/${{ github.base_ref }}" HEAD
           # -----------------------------------------------------------
           # --- For testing -------------------------------------------
           exit 0
           # -----------------------------------------------------------
           # -----------------------------------------------------------
+          git diff --exit-code "origin/${{ github.base_ref }}" HEAD
       - name: Update changelog
         run: |
           version="${{ needs.gather_facts.outputs.version }}"
