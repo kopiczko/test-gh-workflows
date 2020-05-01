@@ -1,7 +1,7 @@
 name: Release pull request
 on:
   pull_request:
-    types: [opened, synchronize]
+    #types: [opened]
 jobs:
   check-if-should-run:
     name: Check if should run
