@@ -17,6 +17,13 @@ jobs:
           if echo $title | grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
             version=$(echo $title | cut -d ' ' -f 2)
           fi
+          # -----------------------------------------------------------
+          # For testing
+          # -----------------------------------------------------------
+          version=v1.2.3-test-4
+          # -----------------------------------------------------------
+          # For testing
+          # -----------------------------------------------------------
           echo "version=\"$version\""
           echo "::set-output name=version::${version}"
   prepare_pr_content:
