@@ -13,9 +13,9 @@ jobs:
         name: Check if release PR
         run: |
           title="${{ github.event.pull_request.title }}"
-          release='false'
+          release="false"
           if grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
-            release='true'
+            release="true"
           fi
           echo "release=\"$release\""
           echo "::set-output name=release::${release}"
@@ -23,7 +23,7 @@ jobs:
     name: Prepare PR content
     runs-on: ubuntu-18.04
     needs: check-if-should-run
-    if: ${{ needs.check-if-should-run.outputs.release }}
+    if: ${{ needs.check-if-should-run.outputs.release == "true" }}
     steps: 
       - name: Check if PR is empty
         run: |
