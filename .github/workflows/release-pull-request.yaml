@@ -1,8 +1,8 @@
 name: Release pull request
 on:
-  pull_request: {}
-  #pull_request:
-  #  types: [opened]
+  pull_request:
+    #types: [opened]
+    types: [edited, opened, reopened, synchronize]
 jobs:
   gather-facts:
     name: Gather facts
@@ -30,24 +30,20 @@ jobs:
       - name: Fail if PR is not empty
         run: |
           git diff --exit-code "${{ github.base_ref }}" "${{ github.head_ref }}"
-      - name: Print GITHUB_SHA and GITHUB_REF
+      - name: Update changelog
         run: |
-          echo "GITHUB_SHA=${GITHUB_SHA}"
-          echo "GITHUB_REF=${GITHUB_REF}"
-      - name: Print some github context fields
+          version="${{ needs.gather-facts.outputs.version }}"
+          # TODO architect changelog create-release -f ./CHANGELOG.md $version
+          echo "$version" > ./CHANGELOG.md
+      - name: Commit changes
         run: |
-          echo "github.ref=${{ github.ref }}"
-          echo "github.base_ref=${{ github.base_ref }}"
-          echo "github.head_ref=${{ github.head_ref }}"
-      - name: Print github context JSON
+          version="${{ needs.gather-facts.outputs.version }}"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ./CHANGELOG.md
+          git commit -m "release $version"
+      - name: Push changes
+        env:
+          REMOTE_REPO: "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         run: |
-          echo "toJson(github)=${{ toJson(github) }}"
-      - name: Print PR title
-        run: |
-          echo "${{ github.event.pull_request.title }}"
-      - name: Print github context JSON
-        run: |
-          echo "toJson(github)=${{ toJson(github) }}"
-      - name: Print Go version
-        run: |
-          go version
+          git push "${REMOTE_REPO}" HEAD:${{ github.ref }}
