@@ -33,7 +33,8 @@ jobs:
       - name: Update changelog
         run: |
           version="${{ needs.gather-facts.outputs.version }}"
-          # TODO architect changelog create-release -f ./CHANGELOG.md $version
+          # TODO architect changelog create-release -f ./CHANGELOG.md "$version"
+          # TODO This should fail if CHANGELOG.md doesn't exist.
           echo "$version" > ./CHANGELOG.md
       - name: Commit changes
         run: |
