@@ -18,11 +18,9 @@ jobs:
             version=$(echo $title | cut -d ' ' -f 2)
           fi
           # -----------------------------------------------------------
-          # For testing
-          # -----------------------------------------------------------
+          # --- For testing -------------------------------------------
           version=v1.2.3-test-4
           # -----------------------------------------------------------
-          # For testing
           # -----------------------------------------------------------
           echo "version=\"$version\""
           echo "::set-output name=version::${version}"
@@ -39,12 +37,16 @@ jobs:
           git fetch origin "${{ github.base_ref }}"
       - name: Fail if PR is not empty
         run: |
+          # -----------------------------------------------------------
+          # --- For testing -------------------------------------------
+          exit 0
+          # -----------------------------------------------------------
+          # -----------------------------------------------------------
           git diff --exit-code "origin/${{ github.base_ref }}" HEAD
       - name: Update changelog
         run: |
           version="${{ needs.gather_facts.outputs.version }}"
           # TODO architect changelog create-release -f ./CHANGELOG.md "$version"
-          # TODO This should fail if CHANGELOG.md doesn't exist.
           echo "$version" > ./CHANGELOG.md
       - name: Commit changes
         run: |
