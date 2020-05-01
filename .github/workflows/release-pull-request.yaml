@@ -1,10 +1,11 @@
 name: Release pull request
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 jobs:
   check-if-should-run:
     name: Check if should run
+    runs-on: ubuntu-18.04
     outputs:
       release: ${{ steps.check-if-release-pr.outputs.release }}
     steps:
@@ -17,12 +18,16 @@ jobs:
             release='true'
           fi
           echo "::set-output name=release::${release}"
-  prepare-pr:
-    name: Check things
+  prepare-pr-content:
+    name: Prepare PR content
     runs-on: ubuntu-18.04
     needs: check-if-should-run
     if: ${{ needs.check-if-should-run.outputs.release }}
     steps: 
+      - name: Check if PR is empty
+        run: |
+          echo "github.base_ref=${{ github.base_ref }}"
+          echo "github.head_ref=${{ github.head_ref }}"
       - name: Print GITHUB_SHA and GITHUB_REF
         run: |
           echo "GITHUB_SHA=${GITHUB_SHA}"
