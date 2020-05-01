@@ -1,11 +1,27 @@
-name: On pull request
+name: Release pull request
 on:
   pull_request:
-    types: [edited, opened, reopened, synchronize]
+    types: [opened]
 jobs:
-  check-things:
+  check-if-should-run:
+    name: Check if should run
+    outputs:
+      release: ${{ steps.check-if-release-pr.outputs.release }}
+    steps:
+      - id: check-if-release-pr
+        name: Check if release PR
+        run: |
+          title="${{ github.event.pull_request.title }}"
+          release='false'
+          if grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
+            release='true'
+          fi
+          echo "::set-output name=release::${release}"
+  prepare-pr:
     name: Check things
     runs-on: ubuntu-18.04
+    needs: check-if-should-run
+    if: ${{ needs.check-if-should-run.outputs.release }}
     steps: 
       - name: Print GITHUB_SHA and GITHUB_REF
         run: |
