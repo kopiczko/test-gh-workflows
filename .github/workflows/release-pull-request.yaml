@@ -17,6 +17,7 @@ jobs:
           if grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
             release='true'
           fi
+          echo "release=\"$release\""
           echo "::set-output name=release::${release}"
   prepare-pr-content:
     name: Prepare PR content
