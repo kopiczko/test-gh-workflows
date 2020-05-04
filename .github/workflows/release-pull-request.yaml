@@ -13,12 +13,8 @@ jobs:
         name: Get version
         run: |
           title="${{ github.event.pull_request.title }}"
-          echo "grep version: $(grep --version)"
-          if echo $title | grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
-            echo "DEBUG: in if"
+          if echo $title | grep -qE '^release v[0-9]+\.[0-9]+\.[0-9]+([.-][^ .-][^ ]*)?( \(#[0-9]+\))?$' ; then
             version=$(echo $title | cut -d ' ' -f 2)
-          else
-            echo "DEBUG: outside if"
           fi
           echo "version=\"$version\""
           echo "::set-output name=version::${version}"
