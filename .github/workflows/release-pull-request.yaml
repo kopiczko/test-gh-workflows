@@ -17,11 +17,6 @@ jobs:
           if echo $title | grep -qE '^release v\d+\.\d+\.\d+([.-][^.-].*)?$' ; then
             version=$(echo $title | cut -d ' ' -f 2)
           fi
-          # -----------------------------------------------------------
-          # --- For testing -------------------------------------------
-          version=v1.2.3-test-4
-          # -----------------------------------------------------------
-          # -----------------------------------------------------------
           echo "version=\"$version\""
           echo "::set-output name=version::${version}"
   prepare_pr_content:
@@ -39,11 +34,6 @@ jobs:
           git fetch origin "${{ github.base_ref }}"
       - name: Fail if PR is not empty
         run: |
-          # -----------------------------------------------------------
-          # --- For testing -------------------------------------------
-          exit 0
-          # -----------------------------------------------------------
-          # -----------------------------------------------------------
           git diff --exit-code "origin/${{ github.base_ref }}" HEAD
       - name: Update changelog
         run: |
