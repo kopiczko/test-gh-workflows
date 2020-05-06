@@ -102,7 +102,7 @@ jobs:
       - name: Update changelog
         run: |
           version="${{ needs.gather_facts.outputs.version }}"
-          architect release prepare . "$version"
+          #architect release prepare . "$version"
           echo "$version" > ./CHANGELOG.md
       - name: Commit changes
         run: |
