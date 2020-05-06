@@ -2,6 +2,8 @@ name: Release pull request
 on:
   pull_request:
     types: [opened]
+env:
+  GO111MODULE: "on"
 jobs:
   debug_info:
     name: Debug info
