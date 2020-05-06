@@ -74,7 +74,7 @@ jobs:
           chmod +x $cache_dir/$binary
       - name: Smoke test
         run: |
-          $cache_dir/$binary version
+          ${{ steps.key.outputs.cache_dir }}/${{ steps.key.outputs.binary }} version
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
