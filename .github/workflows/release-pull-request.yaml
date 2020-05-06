@@ -1,7 +1,7 @@
 name: Release pull request
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 env:
   GO111MODULE: "on"
 jobs:
@@ -12,6 +12,9 @@ jobs:
       - name: Print github context JSON
         run: |
           echo "${{ toJson(github) }}"
+      - name: Print Go env
+        run: |
+          go env
   gather_facts:
     name: Gather facts
     runs-on: ubuntu-18.04
