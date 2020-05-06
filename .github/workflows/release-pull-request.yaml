@@ -2,8 +2,6 @@ name: Release pull request
 on:
   pull_request:
     types: [opened]
-env:
-  GO111MODULE: "on"
 jobs:
   debug_info:
     name: Debug info
@@ -48,11 +46,9 @@ jobs:
         run: |
           cache_dir="/opt/cache"
           cache_key="install-${MODULE}@${VERSION}"
-          install_dir="$(go env GOBIN)"
           echo "::set-output name=binary::${BINARY}"
           echo "::set-output name=cache_dir::${cache_dir}"
           echo "::set-output name=cache_key::${cache_key}"
-          echo "::set-output name=install_dir::${install_dir}"
           echo "::set-output name=module::${MODULE}"
           echo "::set-output name=version::${VERSION}"
       - name: Cache
@@ -63,17 +59,11 @@ jobs:
           path: "${{ steps.key.outputs.cache_dir }}"
       - name: Get module
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        env:
+          GO111MODULE: "on"
+          GOBIN: "${{ steps.key.outputs.cache_dir }}"
         run: |
           go get ${{ steps.key.outputs.module }}@${{ steps.key.outputs.version }}
-      - name: Move to cache location
-        if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-        run: |
-          binary="${{ steps.key.outputs.binary }}"
-          cache_dir="${{ steps.key.outputs.cache_dir }}"
-          install_dir="${{ steps.key.outputs.install_dir }}"
-          mkdir $cache_dir
-          mv "$install_dir/$binary" $cache_dir
-          chmod +x $cache_dir/$binary
       - name: Smoke test
         run: |
           ${{ steps.key.outputs.cache_dir }}/${{ steps.key.outputs.binary }} version
