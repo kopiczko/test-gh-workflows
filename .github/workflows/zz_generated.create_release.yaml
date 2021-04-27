@@ -181,7 +181,7 @@ jobs:
       - create_release
     steps:
       - uses: actions/checkout@v2
-      - uses: giantswarm/floating-version-tag-action@dev
+      - uses: giantswarm/floating-tag-action@dev
   create-release-branch:
     name: Create release branch
     runs-on: ubuntu-20.04
