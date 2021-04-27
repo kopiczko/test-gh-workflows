@@ -173,6 +173,15 @@ jobs:
         with:
           tag_name: "v${{ needs.gather_facts.outputs.version }}"
           release_name: "v${{ needs.gather_facts.outputs.version }}"
+  ensure_floating_major_tags:
+    name: Ensure floating major tags
+    runs-on: ubuntu-20.04
+    needs:
+      - gather_facts
+      - create_release
+    steps:
+      - uses: actions/checkout@v2
+      - uses: giantswarm/floating-version-tag-action@dev
   create-release-branch:
     name: Create release branch
     runs-on: ubuntu-20.04
