@@ -1,0 +1,10 @@
+name: Manual ensure floating major tags
+on:
+  workflow_dispatch: {}
+
+jobs:
+  ensure_floating_tags:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: giantswarm/floating-tag-action@dev
